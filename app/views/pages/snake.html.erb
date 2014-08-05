@@ -318,10 +318,10 @@
             this.ctx = ctx;
             ctx.canvas.setAttribute('style', 'border: 1px solid black;');
 
-            var correctWidth = Math.round(window.innerWidth / 10) * 10 + 2;
+            var correctWidth = Math.round(window.innerWidth / 10) * 10 - 8;
             if (correctWidth > window.innerWidth) correctWidth -= 10;
 
-            var correctHeight = Math.round(window.innerHeight / 10) * 10 + 2;
+            var correctHeight = Math.round(window.innerHeight / 10) * 10 - 8;
             if (correctHeight > window.innerHeight) correctHeight -= 10;
 
             if (dimX && dimY) {
