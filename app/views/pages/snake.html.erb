@@ -5,6 +5,11 @@
 <body>
     <canvas></canvas>
     <script>
+    if (!already_played) {
+        alert("It's SNAKE, everyone's favorite classic! Use the arrow keys to turn and spacebar to pause.");
+        var already_played = true;
+    }
+    
     "use strict";
 
     //     keymaster.js
@@ -318,10 +323,10 @@
             this.ctx = ctx;
             ctx.canvas.setAttribute('style', 'border: 1px solid black;');
 
-            var correctWidth = Math.round(window.innerWidth / 10) * 10 - 8;
+            var correctWidth = Math.floor(window.innerWidth) - 3;
             if (correctWidth > window.innerWidth) correctWidth -= 10;
 
-            var correctHeight = Math.round(window.innerHeight / 10) * 10 - 8;
+            var correctHeight = Math.floor(window.innerHeight) - 4;
             if (correctHeight > window.innerHeight) correctHeight -= 10;
 
             if (dimX && dimY) {
@@ -344,8 +349,8 @@
         };
 
         Board.prototype.createApple = function() {
-            var randomX = Math.floor(Math.random() * (this.dimX / 10)) * 10 + 5;
-            var randomY = Math.floor(Math.random() * (this.dimY / 10)) * 10 + 5;
+            var randomX = Math.floor(Math.random() * (this.dimX / 10 - 1)) * 10 + 5;
+            var randomY = Math.floor(Math.random() * (this.dimY / 10 - 1)) * 10 + 5;
 
             if (this.snake.overlaps([randomX, randomY])){
                 return this.createApple(); 
@@ -452,7 +457,11 @@
         };
 
         Board.prototype.restart = function() {
-            location.reload();
+            this.snake = new SnakeGame.Snake([10, 0]);
+            this.apple = this.createApple();
+            this.applesEaten = 0;
+
+            this.start();
         };
 
         Board.prototype.snakeCollide = function(pos) {
