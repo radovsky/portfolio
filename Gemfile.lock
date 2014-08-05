@@ -232,6 +232,7 @@ DEPENDENCIES
   paperclip (~> 4.1)
   pg
   pry-rails
+  rack
   rails (= 4.1.1)
   sass-rails (~> 4.0.3)
   sdoc

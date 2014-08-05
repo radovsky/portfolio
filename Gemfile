@@ -17,6 +17,7 @@ gem 'figaro'
 gem 'geocoder'
 gem 'newrelic_rpm'
 gem 'thin'
+gem 'rack'
 
 group :doc do
   gem 'sdoc', require: false
