@@ -3,5 +3,6 @@ Rails.application.routes.draw do
   
   get '/snake' => 'pages#snake'
   get '/asteroids' => 'pages#asteroids'
+  get 'resume' => 'pages#pdf'
 end
  
