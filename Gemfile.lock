@@ -244,6 +244,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.3)
   sdoc
   spring
+  sprockets
   therubyracer
   thin
   turbolinks

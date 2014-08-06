@@ -21,6 +21,7 @@ gem 'rack'
 gem 'rack-cache'
 gem 'dalli'
 gem 'kgio'
+gem 'sprockets'
 
 group :doc do
   gem 'sdoc', require: false
