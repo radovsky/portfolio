@@ -33,6 +33,7 @@
 			margin: 0.25em 0 0 0;
 			padding: 0 0 0.5em 0;
 		}
+        
 
 	/* Box */
 
@@ -95,6 +96,7 @@
 
 	#banner
 	{
+        background: #35b88f url('images/banner.svg') bottom center no-repeat;
 		padding: 3.5em;
 		background-size: 200% auto;
 	}
@@ -103,3 +105,19 @@
 		{
 			display: none;
 		}
+        
+        
+        
+        
+        
+		#header footer
+		{
+			position: static;
+			bottom: 9em;
+			margin: 0;
+			width: 100%;
+		}
+        
+        a.button {
+            margin-bottom:5px;
+        }
