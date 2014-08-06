@@ -18,6 +18,9 @@ gem 'geocoder'
 gem 'newrelic_rpm'
 gem 'thin'
 gem 'rack'
+gem 'rack-cache'
+gem 'dalli'
+gem 'kgio'
 
 group :doc do
   gem 'sdoc', require: false
