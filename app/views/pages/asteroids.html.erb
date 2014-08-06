@@ -469,13 +469,13 @@
              
    
              
-             ctx.canvas.width = Math.floor(window.innerWidth);
-             ctx.canvas.height = Math.floor(window.innerHeight);
+             ctx.canvas.width = Math.floor(window.innerWidth) - 10;
+             ctx.canvas.height = Math.floor(window.innerHeight) - 20;
              
          };
     
-         Game.DIM_X = Math.floor(window.innerWidth);
-         Game.DIM_Y = Math.floor(window.innerHeight);
+         Game.DIM_X = Math.floor(window.innerWidth) - 10;
+         Game.DIM_Y = Math.floor(window.innerHeight) - 20;
          Game.REFRESH_MS = 20;
          
          
@@ -498,7 +498,6 @@
              }
         
              this.ship.draw(this.ctx);
-        
          };
     
          Game.prototype.move = function () {
@@ -509,7 +508,6 @@
         
              for (var j = 0; j < this.myBullets.length; j++) {
                  this.myBullets[j].move();
-                 this.myBullets[j].wrap(Game.DIM_X, Game.DIM_Y);
              }
         
              this.ship.move();
@@ -596,6 +594,7 @@
     
     var canvas = document.getElementsByTagName("canvas")[0];
     var s = new Asteroids.Game(canvas.getContext("2d"));
+    alert("It's ASTEROIDS!\n\nDestroy all the asteroids without crashing your ship.\n\nUse the arrow keys to move and spacebar to shoot.")
     s.start();
     </script>
 </body>
