@@ -6,7 +6,7 @@
     <canvas></canvas>
     <script>
     if (!already_played) {
-        alert("It's SNAKE, everyone's favorite classic! Use the arrow keys to turn and spacebar to pause.");
+        alert("It's SNAKE, everyone's favorite classic!\n\nUse the arrow keys to turn and spacebar to pause.\n\nTo change the size of the game board, just change the size of your browser window and refresh the page.");
         var already_played = true;
     }
     
@@ -487,6 +487,7 @@
                         this.applesEaten + " apples though!\n\nPlay again?"
                     );
                     this.restart();
+                    return;
                 }
             }
         };
@@ -501,6 +502,7 @@
                     this.applesEaten + " apples though!\n\nPlay again?"
                 );
                 this.restart();
+                return;
             }
         };
 
@@ -515,11 +517,11 @@
 
         var Snake = SnakeGame.Snake = function(dir, growthRate, startingSize) {
             this.dir = dir || [10, 0];
-            this.growthRate = growthRate || 3;
-            this.startingSize = startingSize || 3;
+            this.growthRate = growthRate || 10;
+            this.startingSize = startingSize || 10;
             this.segments = [];
             for (var i = 0; i < this.startingSize; i++) {
-                this.segments.push([155, 155]);
+                this.segments.push([125, 125]);
             }
         };
 

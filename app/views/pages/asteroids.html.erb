@@ -3,7 +3,7 @@
     <title>Asteroids</title>
 </header>
 <body>
-    <canvas width="500" height="500"></canvas>
+    <canvas width="1000" height="1000"></canvas>
     <script>
     
     Function.prototype.inherits = function (BaseClass) {
@@ -370,8 +370,9 @@
                 2 * Math.PI,
                 false
             );
-        
+            
             ctx.fill();
+        
         
         };
     
@@ -463,14 +464,21 @@
              this.ctx = ctx;
              this.myAsteroids = [];
              this.myBullets = [];
-             this.addAsteroids(5
-     		);
+             this.addAsteroids(10);
              this.ship = new Asteroids.Ship([Game.DIM_X / 2, Game.DIM_Y / 2], [0, 0], Asteroids.Ship.RADIUS, Asteroids.Ship.COLOR);
+             
+   
+             
+             ctx.canvas.width = Math.floor(window.innerWidth);
+             ctx.canvas.height = Math.floor(window.innerHeight);
+             
          };
     
-         Game.DIM_X = 500;
-         Game.DIM_Y = 500;
+         Game.DIM_X = Math.floor(window.innerWidth);
+         Game.DIM_Y = Math.floor(window.innerHeight);
          Game.REFRESH_MS = 20;
+         
+         
     
          Game.prototype.addAsteroids = function (numAsteroids) {
              for (var i = 0; i < numAsteroids; i++){
@@ -587,7 +595,8 @@
     
     
     var canvas = document.getElementsByTagName("canvas")[0];
-    new Asteroids.Game(canvas.getContext("2d")).start();
+    var s = new Asteroids.Game(canvas.getContext("2d"));
+    s.start();
     </script>
 </body>
 </html>
