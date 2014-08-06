@@ -14,8 +14,8 @@
 
 	body
 	{
-		background: #183026 url('../images/bg.jpg') no-repeat;
-		background-size: cover;
+		background: #183026 url('../images/bg-mountains-night.jpg') no-repeat;
+		background-size: fill;
 		background-position: center 0;
 		background-attachment: fixed;
 	}
@@ -761,7 +761,7 @@
 	{
 		position: relative;
 		color: #fff;
-		text-shadow: 0 0 0.5px rgba(255,255,255,0.25);
+		text-shadow: 0 0 50px rgba(0,0,0,0.95);
 		text-align: center;
 		margin: 0;
 		padding: 14em 0 14em 0;
@@ -784,8 +784,8 @@
 			#header header p
 			{
 				border-top: solid 1px rgba(255,255,255,0.5);
-				color: rgba(255,255,255,0.75);
-				text-shadow: 0 0 0.5px rgba(255,255,255,0.1875);
+/*                color: rgba(255,255,255,0.75);*/
+/*                text-shadow: 0 0 0.5px rgba(255,255,255,0.1875);*/
 				font-size: 1em;
 				text-transform: uppercase;
 				letter-spacing: 3px;
