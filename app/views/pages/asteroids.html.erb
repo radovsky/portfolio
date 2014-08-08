@@ -365,7 +365,7 @@
             ctx.arc(
                 this.centerX,
                 this.centerY,
-                this.radius,
+                this.radius, 
                 0,
                 2 * Math.PI,
                 false
@@ -480,7 +480,13 @@
              
          };
          
-         
+         Game.prototype.restart = function() {
+             var canvas = document.getElementsByTagName("canvas")[0];
+             var s = new Asteroids.Game(canvas.getContext("2d"));
+             alert("It's ASTEROIDS!\n\nDestroy all the asteroids without crashing your ship.\n\nUse the arrow keys to move and spacebar to shoot.")
+             s.start();
+             s.draw();
+         };
          
     
          Game.DIM_X = Math.floor(window.innerWidth) - 10;
@@ -551,8 +557,9 @@
              for (var i = 0; i < this.myAsteroids.length; i++) {
                  var currentAsteroid = this.myAsteroids[i];
                  if(this.ship.isCollidedWith(currentAsteroid)) {
-                     window.alert("HULL BREACH");
-                     this.stop();
+                     window.alert("HULL BREACH\n\nPlay again?");
+                     location.reload();
+                     
                  }
 			
      			for (var j = 0; j < this.myBullets.length; j++) {
