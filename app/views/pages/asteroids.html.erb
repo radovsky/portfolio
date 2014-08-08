@@ -393,7 +393,7 @@
     
         Asteroid.inherits(Asteroids.MovingObject);
     
-        Asteroid.COLOR = "black";
+        Asteroid.COLOR = "white";
         Asteroid.RADIUS = 10;
         Asteroid.MAX_SPEED = 5;
 
@@ -462,24 +462,31 @@
          
          var Game = Asteroids.Game = function (ctx) {
              this.ctx = ctx;
+             var that = this;
              this.myAsteroids = [];
              this.myBullets = [];
              this.addAsteroids(10);
              this.ship = new Asteroids.Ship([Game.DIM_X / 2, Game.DIM_Y / 2], [0, 0], Asteroids.Ship.RADIUS, Asteroids.Ship.COLOR);
              
-   
+            
              
              ctx.canvas.width = Math.floor(window.innerWidth) - 10;
              ctx.canvas.height = Math.floor(window.innerHeight) - 20;
              
+             
+             this.background = new Image();
+             this.background.src = "http://www.hiveworkshop.com/forums/resource_images/1/sc2res_79/tn_files/Space.tga.jpg";
+             
+             
          };
+         
+         
+         
     
          Game.DIM_X = Math.floor(window.innerWidth) - 10;
          Game.DIM_Y = Math.floor(window.innerHeight) - 20;
          Game.REFRESH_MS = 20;
          
-         
-    
          Game.prototype.addAsteroids = function (numAsteroids) {
              for (var i = 0; i < numAsteroids; i++){
                  this.myAsteroids.push(Asteroids.Asteroid.randomAsteroid(Game.DIM_X, Game.DIM_Y));
@@ -489,13 +496,24 @@
     
          Game.prototype.draw = function () {
              this.ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
+             
+             var ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
+             ctx.drawImage(this.background,0,0); 
+             
              for (var i = 0; i < this.myAsteroids.length; i++) {
                  this.myAsteroids[i].draw(this.ctx);
              }
+             
+             
+             
+             
+             
         
              for (var j = 0; j < this.myBullets.length; j++) {
                  this.myBullets[j].draw(this.ctx);
              }
+             
+             
         
              this.ship.draw(this.ctx);
          };
