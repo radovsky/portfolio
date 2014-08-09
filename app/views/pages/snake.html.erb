@@ -408,7 +408,8 @@
             ctx.fill();
         };
 
-        Board.prototype.step = function() {
+        Board.prototype.step = function() { 
+            this.alreadyTurned = false;
             this.snake.move();
             if (this.appleCollide()) {
                 this.apple = this.createApple();
@@ -432,26 +433,30 @@
             });
 
             key("up", function(){
-                if (!(that.snake.dir[0] === 0 && that.snake.dir[1] === 10)) {
+                if (!(that.snake.dir[0] === 0 && that.snake.dir[1] === 10) && that.alreadyTurned === false) {
                     that.snake.dir = [0, -10];
+                    that.alreadyTurned = true;
                 }
             });
 
             key("down", function(){
-                if (!(that.snake.dir[0] === 0 && that.snake.dir[1] === -10)) {
+                if (!(that.snake.dir[0] === 0 && that.snake.dir[1] === -10) && that.alreadyTurned === false) {
                     that.snake.dir = [0, 10];
+                    that.alreadyTurned = true;
                 }
             });
 
             key("right", function(){
-                if (!(that.snake.dir[0] === -10 && that.snake.dir[1] === 0)) {
+                if (!(that.snake.dir[0] === -10 && that.snake.dir[1] === 0) && that.alreadyTurned === false) {
                     that.snake.dir = [10, 0];
+                    that.alreadyTurned = true;
                 }
             });
 
             key("left", function(){
-                if (!(that.snake.dir[0] === 10 && that.snake.dir[1] === 0)) {
+                if (!(that.snake.dir[0] === 10 && that.snake.dir[1] === 0) && that.alreadyTurned === false) {
                     that.snake.dir = [-10, 0];
+                    that.alreadyTurned = true;
                 }
             });
         };
