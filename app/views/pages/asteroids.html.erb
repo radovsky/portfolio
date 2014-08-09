@@ -5,314 +5,314 @@
 <body>
     <canvas width="1000" height="1000"></canvas>
     <script>
-    
+
     Function.prototype.inherits = function (BaseClass) {
-      function Surrogate () {}
-      Surrogate.prototype = BaseClass.prototype;
-      this.prototype = new Surrogate();
+        function Surrogate () {}
+        Surrogate.prototype = BaseClass.prototype;
+        this.prototype = new Surrogate();
     };
-    
+
     ;(function(global){
-      var k,
+        var k,
         _handlers = {},
         _mods = { 16: false, 18: false, 17: false, 91: false },
         _scope = 'all',
         // modifier keys
         _MODIFIERS = {
-          '⇧': 16, shift: 16,
-          '⌥': 18, alt: 18, option: 18,
-          '⌃': 17, ctrl: 17, control: 17,
-          '⌘': 91, command: 91
+            '⇧': 16, shift: 16,
+            '⌥': 18, alt: 18, option: 18,
+            '⌃': 17, ctrl: 17, control: 17,
+            '⌘': 91, command: 91
         },
         // special keys
         _MAP = {
-          backspace: 8, tab: 9, clear: 12,
-          enter: 13, 'return': 13,
-          esc: 27, escape: 27, space: 32,
-          left: 37, up: 38,
-          right: 39, down: 40,
-          del: 46, 'delete': 46,
-          home: 36, end: 35,
-          pageup: 33, pagedown: 34,
-          ',': 188, '.': 190, '/': 191,
-          '`': 192, '-': 189, '=': 187,
-          ';': 186, '\'': 222,
-          '[': 219, ']': 221, '\\': 220
+            backspace: 8, tab: 9, clear: 12,
+            enter: 13, 'return': 13,
+            esc: 27, escape: 27, space: 32,
+            left: 37, up: 38,
+            right: 39, down: 40,
+            del: 46, 'delete': 46,
+            home: 36, end: 35,
+            pageup: 33, pagedown: 34,
+            ',': 188, '.': 190, '/': 191,
+            '`': 192, '-': 189, '=': 187,
+            ';': 186, '\'': 222,
+            '[': 219, ']': 221, '\\': 220
         },
         code = function(x){
-          return _MAP[x] || x.toUpperCase().charCodeAt(0);
+            return _MAP[x] || x.toUpperCase().charCodeAt(0);
         },
         _downKeys = [];
 
-      for(k=1;k<20;k++) _MAP['f'+k] = 111+k;
+        for(k=1;k<20;k++) _MAP['f'+k] = 111+k;
 
-      // IE doesn't support Array#indexOf, so have a simple replacement
-      function index(array, item){
-        var i = array.length;
-        while(i--) if(array[i]===item) return i;
-        return -1;
-      }
-
-      // for comparing mods before unassignment
-      function compareArray(a1, a2) {
-        if (a1.length != a2.length) return false;
-        for (var i = 0; i < a1.length; i++) {
-            if (a1[i] !== a2[i]) return false;
-        }
-        return true;
-      }
-
-      var modifierMap = {
-          16:'shiftKey',
-          18:'altKey',
-          17:'ctrlKey',
-          91:'metaKey'
-      };
-      function updateModifierKey(event) {
-          for(k in _mods) _mods[k] = event[modifierMap[k]];
-      };
-
-      // handle keydown event
-      function dispatch(event) {
-        var key, handler, k, i, modifiersMatch, scope;
-        key = event.keyCode;
-
-        if (index(_downKeys, key) == -1) {
-            _downKeys.push(key);
+        // IE doesn't support Array#indexOf, so have a simple replacement
+        function index(array, item){
+            var i = array.length;
+            while(i--) if(array[i]===item) return i;
+            return -1;
         }
 
-        // if a modifier key, set the key.<modifierkeyname> property to true and return
-        if(key == 93 || key == 224) key = 91; // right command on webkit, command on Gecko
-        if(key in _mods) {
-          _mods[key] = true;
-          // 'assignKey' from inside this closure is exported to window.key
-          for(k in _MODIFIERS) if(_MODIFIERS[k] == key) assignKey[k] = true;
-          return;
-        }
-        updateModifierKey(event);
-
-        // see if we need to ignore the keypress (filter() can can be overridden)
-        // by default ignore key presses if a select, textarea, or input is focused
-        if(!assignKey.filter.call(this, event)) return;
-
-        // abort if no potentially matching shortcuts found
-        if (!(key in _handlers)) return;
-
-        scope = getScope();
-
-        // for each potential shortcut
-        for (i = 0; i < _handlers[key].length; i++) {
-          handler = _handlers[key][i];
-
-          // see if it's in the current scope
-          if(handler.scope == scope || handler.scope == 'all'){
-            // check if modifiers match if any
-            modifiersMatch = handler.mods.length > 0;
-            for(k in _mods)
-              if((!_mods[k] && index(handler.mods, +k) > -1) ||
-                (_mods[k] && index(handler.mods, +k) == -1)) modifiersMatch = false;
-            // call the handler and stop the event if neccessary
-            if((handler.mods.length == 0 && !_mods[16] && !_mods[18] && !_mods[17] && !_mods[91]) || modifiersMatch){
-              if(handler.method(event, handler)===false){
-                if(event.preventDefault) event.preventDefault();
-                  else event.returnValue = false;
-                if(event.stopPropagation) event.stopPropagation();
-                if(event.cancelBubble) event.cancelBubble = true;
-              }
+        // for comparing mods before unassignment
+        function compareArray(a1, a2) {
+            if (a1.length != a2.length) return false;
+            for (var i = 0; i < a1.length; i++) {
+                if (a1[i] !== a2[i]) return false;
             }
-          }
+            return true;
         }
-      };
 
-      // unset modifier keys on keyup
-      function clearModifier(event){
-        var key = event.keyCode, k,
+        var modifierMap = {
+            16:'shiftKey',
+            18:'altKey',
+            17:'ctrlKey',
+            91:'metaKey'
+        };
+        function updateModifierKey(event) {
+            for(k in _mods) _mods[k] = event[modifierMap[k]];
+        };
+
+        // handle keydown event
+        function dispatch(event) {
+            var key, handler, k, i, modifiersMatch, scope;
+            key = event.keyCode;
+
+            if (index(_downKeys, key) == -1) {
+                _downKeys.push(key);
+            }
+
+            // if a modifier key, set the key.<modifierkeyname> property to true and return
+            if(key == 93 || key == 224) key = 91; // right command on webkit, command on Gecko
+            if(key in _mods) {
+                _mods[key] = true;
+                // 'assignKey' from inside this closure is exported to window.key
+                for(k in _MODIFIERS) if(_MODIFIERS[k] == key) assignKey[k] = true;
+                return;
+            }
+            updateModifierKey(event);
+
+            // see if we need to ignore the keypress (filter() can can be overridden)
+            // by default ignore key presses if a select, textarea, or input is focused
+            if(!assignKey.filter.call(this, event)) return;
+
+            // abort if no potentially matching shortcuts found
+            if (!(key in _handlers)) return;
+
+            scope = getScope();
+
+            // for each potential shortcut
+            for (i = 0; i < _handlers[key].length; i++) {
+                handler = _handlers[key][i];
+
+                // see if it's in the current scope
+                if(handler.scope == scope || handler.scope == 'all'){
+                    // check if modifiers match if any
+                    modifiersMatch = handler.mods.length > 0;
+                    for(k in _mods)
+                    if((!_mods[k] && index(handler.mods, +k) > -1) ||
+                    (_mods[k] && index(handler.mods, +k) == -1)) modifiersMatch = false;
+                    // call the handler and stop the event if neccessary
+                    if((handler.mods.length == 0 && !_mods[16] && !_mods[18] && !_mods[17] && !_mods[91]) || modifiersMatch){
+                        if(handler.method(event, handler)===false){
+                            if(event.preventDefault) event.preventDefault();
+                            else event.returnValue = false;
+                            if(event.stopPropagation) event.stopPropagation();
+                            if(event.cancelBubble) event.cancelBubble = true;
+                        }
+                    }
+                }
+            }
+        };
+
+        // unset modifier keys on keyup
+        function clearModifier(event){
+            var key = event.keyCode, k,
             i = index(_downKeys, key);
 
-        // remove key from _downKeys
-        if (i >= 0) {
-            _downKeys.splice(i, 1);
-        }
-
-        if(key == 93 || key == 224) key = 91;
-        if(key in _mods) {
-          _mods[key] = false;
-          for(k in _MODIFIERS) if(_MODIFIERS[k] == key) assignKey[k] = false;
-        }
-      };
-
-      function resetModifiers() {
-        for(k in _mods) _mods[k] = false;
-        for(k in _MODIFIERS) assignKey[k] = false;
-      };
-
-      // parse and assign shortcut
-      function assignKey(key, scope, method){
-        var keys, mods;
-        keys = getKeys(key);
-        if (method === undefined) {
-          method = scope;
-          scope = 'all';
-        }
-
-        // for each shortcut
-        for (var i = 0; i < keys.length; i++) {
-          // set modifier keys if any
-          mods = [];
-          key = keys[i].split('+');
-          if (key.length > 1){
-            mods = getMods(key);
-            key = [key[key.length-1]];
-          }
-          // convert to keycode and...
-          key = key[0]
-          key = code(key);
-          // ...store handler
-          if (!(key in _handlers)) _handlers[key] = [];
-          _handlers[key].push({ shortcut: keys[i], scope: scope, method: method, key: keys[i], mods: mods });
-        }
-      };
-
-      // unbind all handlers for given key in current scope
-      function unbindKey(key, scope) {
-        var multipleKeys, keys,
-          mods = [],
-          i, j, obj;
-
-        multipleKeys = getKeys(key);
-
-        for (j = 0; j < multipleKeys.length; j++) {
-          keys = multipleKeys[j].split('+');
-
-          if (keys.length > 1) {
-            mods = getMods(keys);
-          }
-
-          key = keys[keys.length - 1];
-          key = code(key);
-
-          if (scope === undefined) {
-            scope = getScope();
-          }
-          if (!_handlers[key]) {
-            return;
-          }
-          for (i = 0; i < _handlers[key].length; i++) {
-            obj = _handlers[key][i];
-            // only clear handlers if correct scope and mods match
-            if (obj.scope === scope && compareArray(obj.mods, mods)) {
-              _handlers[key][i] = {};
+            // remove key from _downKeys
+            if (i >= 0) {
+                _downKeys.splice(i, 1);
             }
-          }
+
+            if(key == 93 || key == 224) key = 91;
+            if(key in _mods) {
+                _mods[key] = false;
+                for(k in _MODIFIERS) if(_MODIFIERS[k] == key) assignKey[k] = false;
+            }
+        };
+
+        function resetModifiers() {
+            for(k in _mods) _mods[k] = false;
+            for(k in _MODIFIERS) assignKey[k] = false;
+        };
+
+        // parse and assign shortcut
+        function assignKey(key, scope, method){
+            var keys, mods;
+            keys = getKeys(key);
+            if (method === undefined) {
+                method = scope;
+                scope = 'all';
+            }
+
+            // for each shortcut
+            for (var i = 0; i < keys.length; i++) {
+                // set modifier keys if any
+                mods = [];
+                key = keys[i].split('+');
+                if (key.length > 1){
+                    mods = getMods(key);
+                    key = [key[key.length-1]];
+                }
+                // convert to keycode and...
+                key = key[0]
+                key = code(key);
+                // ...store handler
+                if (!(key in _handlers)) _handlers[key] = [];
+                _handlers[key].push({ shortcut: keys[i], scope: scope, method: method, key: keys[i], mods: mods });
+            }
+        };
+
+        // unbind all handlers for given key in current scope
+        function unbindKey(key, scope) {
+            var multipleKeys, keys,
+            mods = [],
+            i, j, obj;
+
+            multipleKeys = getKeys(key);
+
+            for (j = 0; j < multipleKeys.length; j++) {
+                keys = multipleKeys[j].split('+');
+
+                if (keys.length > 1) {
+                    mods = getMods(keys);
+                }
+
+                key = keys[keys.length - 1];
+                key = code(key);
+
+                if (scope === undefined) {
+                    scope = getScope();
+                }
+                if (!_handlers[key]) {
+                    return;
+                }
+                for (i = 0; i < _handlers[key].length; i++) {
+                    obj = _handlers[key][i];
+                    // only clear handlers if correct scope and mods match
+                    if (obj.scope === scope && compareArray(obj.mods, mods)) {
+                        _handlers[key][i] = {};
+                    }
+                }
+            }
+        };
+
+        // Returns true if the key with code 'keyCode' is currently down
+        // Converts strings into key codes.
+        function isPressed(keyCode) {
+            if (typeof(keyCode)=='string') {
+                keyCode = code(keyCode);
+            }
+            return index(_downKeys, keyCode) != -1;
         }
-      };
 
-      // Returns true if the key with code 'keyCode' is currently down
-      // Converts strings into key codes.
-      function isPressed(keyCode) {
-          if (typeof(keyCode)=='string') {
-            keyCode = code(keyCode);
-          }
-          return index(_downKeys, keyCode) != -1;
-      }
-
-      function getPressedKeyCodes() {
-          return _downKeys.slice(0);
-      }
-
-      function filter(event){
-        var tagName = (event.target || event.srcElement).tagName;
-        // ignore keypressed in any elements that support keyboard data input
-        return !(tagName == 'INPUT' || tagName == 'SELECT' || tagName == 'TEXTAREA');
-      }
-
-      // initialize key.<modifier> to false
-      for(k in _MODIFIERS) assignKey[k] = false;
-
-      // set current scope (default 'all')
-      function setScope(scope){ _scope = scope || 'all' };
-      function getScope(){ return _scope || 'all' };
-
-      // delete all handlers for a given scope
-      function deleteScope(scope){
-        var key, handlers, i;
-
-        for (key in _handlers) {
-          handlers = _handlers[key];
-          for (i = 0; i < handlers.length; ) {
-            if (handlers[i].scope === scope) handlers.splice(i, 1);
-            else i++;
-          }
+        function getPressedKeyCodes() {
+            return _downKeys.slice(0);
         }
-      };
 
-      // abstract key logic for assign and unassign
-      function getKeys(key) {
-        var keys;
-        key = key.replace(/\s/g, '');
-        keys = key.split(',');
-        if ((keys[keys.length - 1]) == '') {
-          keys[keys.length - 2] += ',';
+        function filter(event){
+            var tagName = (event.target || event.srcElement).tagName;
+            // ignore keypressed in any elements that support keyboard data input
+            return !(tagName == 'INPUT' || tagName == 'SELECT' || tagName == 'TEXTAREA');
         }
-        return keys;
-      }
 
-      // abstract mods logic for assign and unassign
-      function getMods(key) {
-        var mods = key.slice(0, key.length - 1);
-        for (var mi = 0; mi < mods.length; mi++)
-        mods[mi] = _MODIFIERS[mods[mi]];
-        return mods;
-      }
+        // initialize key.<modifier> to false
+        for(k in _MODIFIERS) assignKey[k] = false;
 
-      // cross-browser events
-      function addEvent(object, event, method) {
-        if (object.addEventListener)
-          object.addEventListener(event, method, false);
-        else if(object.attachEvent)
-          object.attachEvent('on'+event, function(){ method(window.event) });
-      };
+        // set current scope (default 'all')
+        function setScope(scope){ _scope = scope || 'all' };
+        function getScope(){ return _scope || 'all' };
 
-      // set the handlers globally on document
-      addEvent(document, 'keydown', function(event) { dispatch(event) }); // Passing _scope to a callback to ensure it remains the same by execution. Fixes #48
-      addEvent(document, 'keyup', clearModifier);
+        // delete all handlers for a given scope
+        function deleteScope(scope){
+            var key, handlers, i;
 
-      // reset modifiers to false whenever the window is (re)focused.
-      addEvent(window, 'focus', resetModifiers);
+            for (key in _handlers) {
+                handlers = _handlers[key];
+                for (i = 0; i < handlers.length; ) {
+                    if (handlers[i].scope === scope) handlers.splice(i, 1);
+                    else i++;
+                }
+            }
+        };
 
-      // store previously defined key
-      var previousKey = global.key;
+        // abstract key logic for assign and unassign
+        function getKeys(key) {
+            var keys;
+            key = key.replace(/\s/g, '');
+            keys = key.split(',');
+            if ((keys[keys.length - 1]) == '') {
+                keys[keys.length - 2] += ',';
+            }
+            return keys;
+        }
 
-      // restore previously defined key and return reference to our key object
-      function noConflict() {
-        var k = global.key;
-        global.key = previousKey;
-        return k;
-      }
+        // abstract mods logic for assign and unassign
+        function getMods(key) {
+            var mods = key.slice(0, key.length - 1);
+            for (var mi = 0; mi < mods.length; mi++)
+            mods[mi] = _MODIFIERS[mods[mi]];
+            return mods;
+        }
 
-      // set window.key and window.key.set/get/deleteScope, and the default filter
-      global.key = assignKey;
-      global.key.setScope = setScope;
-      global.key.getScope = getScope;
-      global.key.deleteScope = deleteScope;
-      global.key.filter = filter;
-      global.key.isPressed = isPressed;
-      global.key.getPressedKeyCodes = getPressedKeyCodes;
-      global.key.noConflict = noConflict;
-      global.key.unbind = unbindKey;
+        // cross-browser events
+        function addEvent(object, event, method) {
+            if (object.addEventListener)
+            object.addEventListener(event, method, false);
+            else if(object.attachEvent)
+            object.attachEvent('on'+event, function(){ method(window.event) });
+        };
 
-      if(typeof module !== 'undefined') module.exports = assignKey;
+        // set the handlers globally on document
+        addEvent(document, 'keydown', function(event) { dispatch(event) }); // Passing _scope to a callback to ensure it remains the same by execution. Fixes #48
+        addEvent(document, 'keyup', clearModifier);
+
+        // reset modifiers to false whenever the window is (re)focused.
+        addEvent(window, 'focus', resetModifiers);
+
+        // store previously defined key
+        var previousKey = global.key;
+
+        // restore previously defined key and return reference to our key object
+        function noConflict() {
+            var k = global.key;
+            global.key = previousKey;
+            return k;
+        }
+
+        // set window.key and window.key.set/get/deleteScope, and the default filter
+        global.key = assignKey;
+        global.key.setScope = setScope;
+        global.key.getScope = getScope;
+        global.key.deleteScope = deleteScope;
+        global.key.filter = filter;
+        global.key.isPressed = isPressed;
+        global.key.getPressedKeyCodes = getPressedKeyCodes;
+        global.key.noConflict = noConflict;
+        global.key.unbind = unbindKey;
+
+        if(typeof module !== 'undefined') module.exports = assignKey;
 
     })(this);
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
     (function (root) {
         var Asteroids = root.Asteroids = (root.Asteroids || {});
-    
+
         var MovingObject = Asteroids.MovingObject = function(pos, vel, radius, color) {
             this.centerX = pos[0];
             this.centerY = pos[1];
@@ -320,14 +320,14 @@
             this.radius = radius;
             this.color = color;
         };
-    
+
         MovingObject.prototype.move = function() {
             // vel === [xSpeed, ySpeed]
-        
+
             this.centerX += this.vel[0];
             this.centerY += this.vel[1];
         };
-    
+
         MovingObject.prototype.bounce = function(dimX, dimY) {
             if (this.centerX + this.radius > dimX) {
                 this.vel[0] *= -1;
@@ -342,7 +342,7 @@
                 this.vel[1] *= -1;
             }
         };
-	
+
         MovingObject.prototype.wrap = function(dimX, dimY) {
             if (this.centerX + this.radius > dimX) {
                 this.centerX = 0 + this.radius;
@@ -357,11 +357,11 @@
                 this.centerY = dimY - this.radius;
             }
         };
-    
+
         MovingObject.prototype.draw = function(ctx) {
             ctx.fillStyle = this.color;
             ctx.beginPath();
-        
+
             ctx.arc(
                 this.centerX,
                 this.centerY,
@@ -370,42 +370,42 @@
                 2 * Math.PI,
                 false
             );
-            
+
             ctx.fill();
-        
-        
+
+
         };
-    
+
         MovingObject.prototype.isCollidedWith = function(otherObject) {
             var distance = Math.sqrt(
-    			Math.pow((this.centerX - otherObject.centerX), 2) +
+                Math.pow((this.centerX - otherObject.centerX), 2) +
                 Math.pow((this.centerY - otherObject.centerY), 2)
-    		);
+            );
             return ( (this.radius + otherObject.radius) > distance);
         };
-        
-        
-        
-        
+
+
+
+
         var Asteroid = Asteroids.Asteroid = function (pos, vel, radius, color) {
             Asteroids.MovingObject.call(this, pos, vel, radius, color);
         };
-    
+
         Asteroid.inherits(Asteroids.MovingObject);
-    
+
         Asteroid.COLOR = "white";
         Asteroid.RADIUS = 10;
         Asteroid.MAX_SPEED = 5;
 
-    
+
         var randomVec = function() {
             var xIsNeg = (Math.random() > 0.5 ? 1 : -1);
             var yIsNeg = (Math.random() > 0.5 ? 1 : -1);
-        
+
             return [(Math.floor(Asteroid.MAX_SPEED * Math.random()) + 1) * xIsNeg, 
             (Math.floor(Asteroid.MAX_SPEED * Math.random()) + 1) * yIsNeg];
         };
-    
+
         //fix edge spawning problem
         Asteroid.randomAsteroid = function (dimX, dimY) {
             var centerX = dimX * Math.random();
@@ -415,208 +415,196 @@
             );
             return asteroid;
         };
-        
-        
+
+
         var Bullet = Asteroids.Bullet = function (pos, vel, radius, color, game) {
             Asteroids.MovingObject.call(this, pos, vel, radius, color);
             this.game = game;
         };
-    
-         Bullet.inherits(Asteroids.MovingObject);
-     
-         //maybe do this in the game class
-         Bullet.prototype.hitAsteroids = function() {
-             var allAsteroids = Asteroids.Game.myAsteroids;
-             for (var i = 0; i < allAsteroids.length; i++) {
-                 if (this.isCollidedWith(allAsteroids[i])) {
-    				 console.log("Asteroid hit");
-                     this.game.removeAsteroid(allAsteroids[i]);
-                     this.game.removeBullet(this);
-                 }
-             }
-         };
-         
-         
-         var Ship = Asteroids.Ship = function (pos, vel, radius, color) {
-             Asteroids.MovingObject.call(this, pos, vel, radius, color);
-         };
-    
-         Ship.COLOR = "red";
-         Ship.RADIUS = 10;
-    
-         Ship.inherits(Asteroids.MovingObject);
-    
-         //add friction
-         Ship.prototype.power = function(impulse) {
-             this.vel[0] += impulse[0];
-             this.vel[1] += impulse[1];
-             console.log("inside power");
-         };
-    
-    
-         Ship.prototype.fireBullet = function(game) {
-             var bulletVel = [this.vel[0] * 3, this.vel[1] * 3];
-             return new Asteroids.Bullet([this.centerX, this.centerY], bulletVel, this.radius/2, "yellow", game);
-         };
-         
-         
-         var Game = Asteroids.Game = function (ctx) {
-             this.ctx = ctx;
-             var that = this;
-             this.myAsteroids = [];
-             this.myBullets = [];
-             this.addAsteroids(10);
-             this.ship = new Asteroids.Ship([Game.DIM_X / 2, Game.DIM_Y / 2], [0, 0], Asteroids.Ship.RADIUS, Asteroids.Ship.COLOR);
-             
-            
-             
-             ctx.canvas.width = Math.floor(window.innerWidth) - 10;
-             ctx.canvas.height = Math.floor(window.innerHeight) - 20;
-             
-             
-             this.background = new Image();
-             this.background.src = "http://www.hiveworkshop.com/forums/resource_images/1/sc2res_79/tn_files/Space.tga.jpg";
-             
-             
-         };
-         
-         Game.prototype.restart = function() {
-             var canvas = document.getElementsByTagName("canvas")[0];
-             var s = new Asteroids.Game(canvas.getContext("2d"));
-             alert("It's ASTEROIDS!\n\nDestroy all the asteroids without crashing your ship.\n\nUse the arrow keys to move and spacebar to shoot.")
-             s.start();
-             s.draw();
-         };
-         
-    
-         Game.DIM_X = Math.floor(window.innerWidth) - 10;
-         Game.DIM_Y = Math.floor(window.innerHeight) - 20;
-         Game.REFRESH_MS = 20;
-         
-         Game.prototype.addAsteroids = function (numAsteroids) {
-             for (var i = 0; i < numAsteroids; i++){
-                 this.myAsteroids.push(Asteroids.Asteroid.randomAsteroid(Game.DIM_X, Game.DIM_Y));
-             }     
-         };
 
-    
-         Game.prototype.draw = function () {
-             this.ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
-             
-             var ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
-             ctx.drawImage(this.background,0,0); 
-             
-             for (var i = 0; i < this.myAsteroids.length; i++) {
-                 this.myAsteroids[i].draw(this.ctx);
-             }
-             
-             
-             
-             
-             
-        
-             for (var j = 0; j < this.myBullets.length; j++) {
-                 this.myBullets[j].draw(this.ctx);
-             }
-             
-             
-        
-             this.ship.draw(this.ctx);
-         };
-    
-         Game.prototype.move = function () {
-             for (var i = 0; i < this.myAsteroids.length; i++) {
-                 this.myAsteroids[i].move();
-                 this.myAsteroids[i].wrap(Game.DIM_X, Game.DIM_Y);
-             }
-        
-             for (var j = 0; j < this.myBullets.length; j++) {
-                 this.myBullets[j].move();
-             }
-        
-             this.ship.move();
-        
-             this.ship.wrap(Game.DIM_X, Game.DIM_Y);
-         };
-    
-         Game.prototype.step = function () {
-             this.move();
-             this.draw();
-             this.checkCollisions();
-         };
-    
-         Game.prototype.start = function () {
-             var game = this;
-             this.bindKeyHandlers();
-             this.timerId = window.setInterval ( function () {
-                 game.step();
-             }, Game.REFRESH_MS);
-         };
-    
-         Game.prototype.checkCollisions = function() {
-             for (var i = 0; i < this.myAsteroids.length; i++) {
-                 var currentAsteroid = this.myAsteroids[i];
-                 if(this.ship.isCollidedWith(currentAsteroid)) {
-                     window.alert("HULL BREACH\n\nPlay again?");
-                     location.reload();
-                     
-                 }
-			
-     			for (var j = 0; j < this.myBullets.length; j++) {
-     				var currentBullet = this.myBullets[j];
-     				if (currentAsteroid.isCollidedWith(currentBullet)) {
-     					this.removeBullet(currentBullet);
-     					this.removeAsteroid(currentAsteroid);
-     				}
-     			}
-             }
-         };
-    
-         Game.prototype.fireBullet = function () {
-             console.log("firing bullet!");
-             var newBullet = this.ship.fireBullet(this);
-             this.myBullets.push(newBullet);
-         };
-    
-         Game.prototype.removeAsteroid = function(asteroid) {
-     		console.log("removing asteroid");
-             var deleteIndex = this.myAsteroids.indexOf(asteroid);
-             this.myAsteroids.splice(deleteIndex, 1);
-         };
-    
-         Game.prototype.removeBullet = function(bullet) {
-     		console.log("removing bullet");
-             var deleteIndex = this.myBullets.indexOf(bullet);
-             this.myBullets.splice(deleteIndex, 1);
-         };
-    
-         Game.prototype.stop = function() {
-             clearInterval(this.timerId);
-         };
-    
-         Game.prototype.bindKeyHandlers = function () {
-             var that = this;
-             window.key('up', function() { 
-                 that.ship.power([0, -1]);
-             });
-             window.key('down', function() { 
-                 that.ship.power([0, 1]);
-             });
-             window.key('left', function() { 
-                 that.ship.power([-1, 0]);
-             });
-             window.key('right', function() { 
-                 that.ship.power([1, 0]);
-             });
-             window.key('space', function() { 
-                 that.fireBullet();
-             });
-         };
-        
+        Bullet.inherits(Asteroids.MovingObject);
+
+        //maybe do this in the game class
+        Bullet.prototype.hitAsteroids = function() {
+            var allAsteroids = Asteroids.Game.myAsteroids;
+            for (var i = 0; i < allAsteroids.length; i++) {
+                if (this.isCollidedWith(allAsteroids[i])) {
+                    console.log("Asteroid hit");
+                    this.game.removeAsteroid(allAsteroids[i]);
+                    this.game.removeBullet(this);
+                }
+            }
+        };
+
+
+        var Ship = Asteroids.Ship = function (pos, vel, radius, color) {
+            Asteroids.MovingObject.call(this, pos, vel, radius, color);
+        };
+
+        Ship.COLOR = "red";
+        Ship.RADIUS = 10;
+
+        Ship.inherits(Asteroids.MovingObject);
+
+        //add friction
+        Ship.prototype.power = function(impulse) {
+            this.vel[0] += impulse[0];
+            this.vel[1] += impulse[1];
+            console.log("inside power");
+        };
+
+
+        Ship.prototype.fireBullet = function(game) {
+            var bulletVel = [this.vel[0] * 3, this.vel[1] * 3];
+            return new Asteroids.Bullet([this.centerX, this.centerY], bulletVel, this.radius/2, "yellow", game);
+        };
+
+
+        var Game = Asteroids.Game = function (ctx) {
+            this.ctx = ctx;
+            var that = this;
+            this.myAsteroids = [];
+            this.myBullets = [];
+            this.addAsteroids(10);
+            this.ship = new Asteroids.Ship([Game.DIM_X / 2, Game.DIM_Y / 2], [0, 0], Asteroids.Ship.RADIUS, Asteroids.Ship.COLOR);
+
+            ctx.canvas.width = Math.floor(window.innerWidth) - 10;
+            ctx.canvas.height = Math.floor(window.innerHeight) - 20;
+
+
+            this.background = new Image();
+            this.background.src = "http://www.hiveworkshop.com/forums/resource_images/1/sc2res_79/tn_files/Space.tga.jpg";
+
+
+        };
+
+        Game.prototype.restart = function() {
+            var canvas = document.getElementsByTagName("canvas")[0];
+            var s = new Asteroids.Game(canvas.getContext("2d"));
+            alert("It's ASTEROIDS!\n\nDestroy all the asteroids without crashing your ship.\n\nUse the arrow keys to move and spacebar to shoot a missile (while moving) or drop a space mine (while sitting still).")
+            s.start();
+            s.draw();
+        };
+
+        Game.DIM_X = Math.floor(window.innerWidth) - 10;
+        Game.DIM_Y = Math.floor(window.innerHeight) - 20;
+        Game.REFRESH_MS = 20;
+
+        Game.prototype.addAsteroids = function (numAsteroids) {
+            for (var i = 0; i < numAsteroids; i++){
+                this.myAsteroids.push(Asteroids.Asteroid.randomAsteroid(Game.DIM_X, Game.DIM_Y));
+            }     
+        };
+
+        Game.prototype.draw = function () {
+            this.ctx.clearRect(0, 0, Game.DIM_X, Game.DIM_Y);
+
+            var ctx = document.getElementsByTagName("canvas")[0].getContext("2d");
+            ctx.drawImage(this.background,0,0); 
+
+            for (var i = 0; i < this.myAsteroids.length; i++) {
+                this.myAsteroids[i].draw(this.ctx);
+            }
+            for (var j = 0; j < this.myBullets.length; j++) {
+                this.myBullets[j].draw(this.ctx);
+            }
+            this.ship.draw(this.ctx);
+        };
+
+        Game.prototype.move = function () {
+            for (var i = 0; i < this.myAsteroids.length; i++) {
+                this.myAsteroids[i].move();
+                this.myAsteroids[i].wrap(Game.DIM_X, Game.DIM_Y);
+            }
+
+            for (var j = 0; j < this.myBullets.length; j++) {
+                this.myBullets[j].move();
+            }
+
+            this.ship.move();
+
+            this.ship.wrap(Game.DIM_X, Game.DIM_Y);
+        };
+
+        Game.prototype.step = function () {
+            if (this.myAsteroids.length === 0) {
+                alert("You won!\n\nPlay again?");
+                location.reload();
+            }               
+            this.move();
+            this.draw();
+            this.checkCollisions();
+        };
+
+        Game.prototype.start = function () {
+            var game = this;
+            this.bindKeyHandlers();
+            this.timerId = window.setInterval ( function () {
+                game.step();
+            }, Game.REFRESH_MS);
+        };
+
+        Game.prototype.checkCollisions = function() {
+            for (var i = 0; i < this.myAsteroids.length; i++) {
+                var currentAsteroid = this.myAsteroids[i];
+                if(this.ship.isCollidedWith(currentAsteroid)) {
+                    window.alert("HULL BREACH\n\nPlay again?");
+                    location.reload();
+ 
+                }
+
+                for (var j = 0; j < this.myBullets.length; j++) {
+                    var currentBullet = this.myBullets[j];
+                    if (currentAsteroid.isCollidedWith(currentBullet)) {
+                        this.removeBullet(currentBullet);
+                        this.removeAsteroid(currentAsteroid);
+                    }
+                }
+            }
+        };
+
+        Game.prototype.fireBullet = function () {
+            var newBullet = this.ship.fireBullet(this);
+            this.myBullets.push(newBullet);
+        };
+
+        Game.prototype.removeAsteroid = function(asteroid) {
+            var deleteIndex = this.myAsteroids.indexOf(asteroid);
+            this.myAsteroids.splice(deleteIndex, 1);
+        };
+
+        Game.prototype.removeBullet = function(bullet) {
+            var deleteIndex = this.myBullets.indexOf(bullet);
+            this.myBullets.splice(deleteIndex, 1);
+        };
+
+        Game.prototype.stop = function() {
+            clearInterval(this.timerId);
+        };
+
+        Game.prototype.bindKeyHandlers = function () {
+            var that = this;
+            window.key('up', function() { 
+                that.ship.power([0, -1]);
+            });
+            window.key('down', function() { 
+                that.ship.power([0, 1]);
+            });
+            window.key('left', function() { 
+                that.ship.power([-1, 0]);
+            });
+            window.key('right', function() { 
+                that.ship.power([1, 0]);
+            });
+            window.key('space', function() { 
+                that.fireBullet();
+            });
+        };
+
     })(this);
-    
-    
-    
+
+
+
     var canvas = document.getElementsByTagName("canvas")[0];
     var s = new Asteroids.Game(canvas.getContext("2d"));
     alert("It's ASTEROIDS!\n\nDestroy all the asteroids without crashing your ship.\n\nUse the arrow keys to move and spacebar to shoot.")
