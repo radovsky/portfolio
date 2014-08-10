@@ -481,9 +481,9 @@
         Game.prototype.restart = function() {
             var canvas = document.getElementsByTagName("canvas")[0];
             var s = new Asteroids.Game(canvas.getContext("2d"));
-            alert("It's ASTEROIDS!\n\nDestroy all the asteroids without crashing your ship.\n\nUse the arrow keys to move and spacebar to shoot a missile (while moving) or drop a space mine (while sitting still).")
             s.start();
             s.draw();
+            alert("It's ASTEROIDS!\n\nDestroy all the asteroids without crashing your ship.\n\nUse the arrow keys to move and spacebar to shoot a missile (while moving) or drop a space mine (while sitting still).")
         };
 
         Game.DIM_X = Math.floor(window.innerWidth) - 10;
