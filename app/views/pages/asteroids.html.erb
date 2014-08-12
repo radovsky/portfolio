@@ -528,7 +528,7 @@
 
         Game.prototype.step = function () {
             if (this.myAsteroids.length === 0) {
-                alert("You won!\n\nPlay again?");
+                alert("You won!");
                 location.reload();
             }               
             this.move();
@@ -548,7 +548,6 @@
             for (var i = 0; i < this.myAsteroids.length; i++) {
                 var currentAsteroid = this.myAsteroids[i];
                 if(this.ship.isCollidedWith(currentAsteroid)) {
-                    window.alert("HULL BREACH\n\nPlay again?");
                     location.reload();
  
                 }
@@ -607,7 +606,6 @@
 
     var canvas = document.getElementsByTagName("canvas")[0];
     var s = new Asteroids.Game(canvas.getContext("2d"));
-    alert("It's ASTEROIDS!\n\nDestroy all the asteroids without crashing your ship.\n\nUse the arrow keys to move and spacebar to shoot.")
     s.start();
     </script>
 </body>
