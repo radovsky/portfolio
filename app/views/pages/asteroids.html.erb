@@ -5,6 +5,10 @@
 <body>
     <canvas width="1000" height="1000"></canvas>
     <script>
+    if (!alreadyPlayed) {
+        alert("It's ASTEROIDS, everyone's favorite classic!\n\nUse the arrow keys to move your ship, and spacebar to shoot missiles.");
+        var alreadyPlayed = true;
+    }
 
     Function.prototype.inherits = function (BaseClass) {
         function Surrogate () {}
